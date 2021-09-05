@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import FavoriteIcon from "@material-ui/icons/Favorite";
+import { Link } from "react-router-dom";
 
 function Blog() {
   return (
@@ -22,7 +23,9 @@ function Blog() {
       </p>
       <Actions>
         <FavoriteIcon className="like-icon" />
-        <button>Read more...</button>
+        <button>
+          <Link to="/blog/5">Read more...</Link>
+        </button>
       </Actions>
     </Container>
   );

@@ -1,12 +1,13 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 function Header() {
   return (
     <Container>
       <Center>
-        <a>
+        <Link to="/">
           <span>Home</span>
-        </a>
+        </Link>
         <a>
           <span>About</span>
         </a>

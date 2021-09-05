@@ -1,0 +1,52 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #53d611;
+}
+
+body {
+  font-family: sans-serif, serif;
+}
+
+button,
+input,
+textarea {
+  font-family: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+a,
+span,
+p {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+/* Loading animation */
+@keyframes loading {
+  0% {
+    background: rgba(0, 0, 0, 0.05);
+  }
+  100% {
+    background: rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Active catagori */
+.active {
+  color: var(--primary);
+}
+
+.like-icon {
+  color: rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}

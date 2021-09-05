@@ -73,7 +73,7 @@ const Banner = styled.div`
     background: linear-gradient(
         to left bottom,
         rgba(0, 0, 0, 0.1),
-        rgba(0, 0, 0, 0.3)
+        rgba(0, 0, 0, 0.1)
       ),
       url("https://source.unsplash.com/1600x400/?blog,nature") no-repeat center
         center/cover;

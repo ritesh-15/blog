@@ -3,6 +3,12 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import { ShareOutlined } from "@material-ui/icons";
 
 function BlogDetail() {
+  const like = (e) => {
+    const id = document.getElementById("like");
+
+    id.classList.toggle("like");
+  };
+
   return (
     <Container>
       <Image>
@@ -27,7 +33,12 @@ function BlogDetail() {
             <h5>4 August 2021</h5>
           </div>
         </About>
-        <FavoriteIcon fontSize="large" className="like-icon" />
+        <FavoriteIcon
+          id="like"
+          onClick={like}
+          fontSize="large"
+          className="like-icon"
+        />
       </Description>
 
       <Text>
@@ -105,10 +116,14 @@ const Container = styled.div`
 
 const Image = styled.div`
   width: 100%;
-  height: 300px;
+  height: 400px;
   border-radius: 10px;
   overflow: hidden;
   animation: loading linear infinite 1s alternate;
+
+  @media (max-width: 768px) {
+    height: 200px;
+  }
 
   img {
     width: 100%;

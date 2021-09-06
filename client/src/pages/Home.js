@@ -1,15 +1,27 @@
+import { useContext } from "react";
+import { useHistory } from "react-router";
 import styled from "styled-components";
 import Blogs from "../components/Blogs";
 import Catagories from "../components/Catagories";
+import userContext from "../context/user/userContext";
 
 function Home() {
+  const { user } = useContext(userContext);
+  const history = useHistory();
+
+  const createBlog = () => {
+    if (!user) history.push("/login");
+
+    console.log("create");
+  };
+
   return (
     <Container>
       <Banner>
         <Text>
           <h1>Create awesome blogs</h1>
           <p>Free blogging site for bloggers</p>
-          <button>Create a blog</button>
+          <button onClick={createBlog}>Create a blog</button>
         </Text>
       </Banner>
 
@@ -55,14 +67,19 @@ const Banner = styled.div`
 
   button {
     padding: 0.8rem 2rem;
-    background: #fff;
+    background: var(--primary);
     border: none;
     outline: none;
     border-radius: 3px;
     cursor: pointer;
     font-size: 1rem;
-    color: var(--primary);
+    color: #fff;
     font-weight: 600;
+    transition: all 0.25s ease-in;
+
+    &:hover {
+      opacity: 0.9;
+    }
   }
 
   &::before {

@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import FavoriteIcon from "@material-ui/icons/Favorite";
-import { ShareOutlined } from "@material-ui/icons";
 
 function BlogDetail() {
   const like = (e) => {

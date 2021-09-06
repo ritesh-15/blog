@@ -14,4 +14,6 @@ export const apiCheckEmail = (email) => api.get(`/api/check-email/${email}`);
 
 export const apiLogin = (data) => api.post("/api/login", data);
 
+export const apiLogOut = () => api.post("/api/logout");
+
 export default api;

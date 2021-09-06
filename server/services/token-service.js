@@ -30,6 +30,10 @@ class TokenService {
   async updateRefreshToken(userId, token) {
     return await Token.updateOne({ userId }, { token });
   }
+
+  async removeToken(token) {
+    return await Token.deleteOne({ token });
+  }
 }
 
 export default new TokenService();

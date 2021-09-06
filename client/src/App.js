@@ -13,6 +13,7 @@ import { useContext } from "react";
 import userContext from "./context/user/userContext";
 import { useLoadingWithRefresh } from "./hooks/userRefreshHooks";
 import styled from "styled-components";
+import Profile from "./pages/Profile";
 
 function App() {
   const loading = useLoadingWithRefresh();
@@ -20,6 +21,7 @@ function App() {
   return loading ? (
     <Loading>
       <div />
+      <p>Loading...</p>
     </Loading>
   ) : (
     <Router>
@@ -36,11 +38,36 @@ function App() {
           <LoginRoute path="/login">
             <Auth />
           </LoginRoute>
+          <ProtectedRoute path="/profile/:id">
+            <Header />
+            <Profile />
+          </ProtectedRoute>
         </>
       </Switch>
     </Router>
   );
 }
+
+const ProtectedRoute = ({ children, ...rest }) => {
+  const { user } = useContext(userContext);
+  return (
+    <Route
+      {...rest}
+      render={({ location }) => {
+        return !user ? (
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: { from: location },
+            }}
+          />
+        ) : (
+          children
+        );
+      }}
+    ></Route>
+  );
+};
 
 const LoginRoute = ({ children, ...rest }) => {
   const { user } = useContext(userContext);
@@ -72,6 +99,11 @@ const Loading = styled.div`
   align-items: center;
   background: rgba(255, 255, 255, 0.1);
   justify-content: center;
+  flex-direction: column;
+
+  p {
+    margin-top: 1rem;
+  }
 
   div {
     width: 50px;
@@ -81,6 +113,6 @@ const Loading = styled.div`
     border-top: 4px solid var(--primary);
     border-left: 4px solid var(--primary);
     border-bottom: 4px solid var(--primary);
-    animation: spin ease infinite 1s;
+    animation: spin ease-in infinite 1s;
   }
 `;

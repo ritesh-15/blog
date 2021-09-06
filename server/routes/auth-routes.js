@@ -11,4 +11,6 @@ router.get("/check-email/:email", userController.checkEmail);
 
 router.get("/refresh", userController.refresh);
 
+router.post("/logout", userController.logout);
+
 export default router;

@@ -25,9 +25,19 @@ function Header() {
             <button>Login</button>
           </Link>
         ) : (
-          <p>{user.name}</p>
+          <>
+            <Link to={`/profile/${user._id}`}>
+              <p>{user.name}</p>
+            </Link>
+
+            {user.avatar && (
+              <img
+                src="https://source.unsplash.com/1600x900/?nature,water"
+                alt=""
+              />
+            )}
+          </>
         )}
-        <img src="https://source.unsplash.com/1600x900/?nature,water" alt="" />
       </User>
     </Container>
   );

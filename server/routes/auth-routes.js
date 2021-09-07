@@ -1,3 +1,4 @@
+import authMiddleware from "../middlewares/authMiddleware.js";
 import { Router } from "express";
 import userController from "../controllers/user-controller.js";
 
@@ -12,5 +13,7 @@ router.get("/check-email/:email", userController.checkEmail);
 router.get("/refresh", userController.refresh);
 
 router.post("/logout", userController.logout);
+
+router.post("/update-profile", authMiddleware, userController.updateProfile);
 
 export default router;

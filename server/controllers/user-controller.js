@@ -187,6 +187,8 @@ class UserController {
 
     res.json({ user: null });
   }
+
+  async updateProfile(req, res) {}
 }
 
 export default new UserController();

@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import styled from "styled-components";
 import { apiLogOut } from "../api/axios";
 import Blogs from "../components/Blogs";
@@ -6,6 +6,8 @@ import userContext from "../context/user/userContext";
 
 function Profile() {
   const { user, setUser } = useContext(userContext);
+  const [name, setName] = useState(user?.name);
+  const [email, setEmail] = useState(user?.email);
 
   const logOut = async () => {
     try {
@@ -20,14 +22,31 @@ function Profile() {
     <Container>
       <Details>
         <Image>
-          <img
-            src="https://source.unsplash.com/1600x900/?nature,water"
-            alt=""
+          <label htmlFor="image">
+            <img
+              src="https://source.unsplash.com/1600x900/?nature,water"
+              alt=""
+            />
+          </label>
+          <input
+            id="image"
+            type="file"
+            accept="image/png,image/jpg,image/jpeg"
           />
         </Image>
         <Info>
-          <h1>{user.name}</h1>
-          <h3>{user.email}</h3>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Name"
+          />
+          <input
+            type="email"
+            placeholder="Email address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
           <div>
             <button>Update Profile</button>
             <button onClick={logOut}>Log out</button>
@@ -51,13 +70,23 @@ const Container = styled.div`
 const Details = styled.div`
   display: flex;
   margin-bottom: 2rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 const Image = styled.div`
   width: 150px;
   height: 150px;
   border-radius: 50%;
+  animation: loading linear infinite 1s alternate;
   overflow: hidden;
+  margin-bottom: 1rem;
+
+  input {
+    display: none;
+  }
 
   img {
     width: 100%;
@@ -69,9 +98,28 @@ const Image = styled.div`
 const Info = styled.div`
   margin-left: 2rem;
 
-  h3 {
-    font-size: 1.25rem;
+  @media (max-width: 768px) {
+    margin: 1rem 0;
+  }
+
+  input {
+    display: block;
     margin-bottom: 1rem;
+    font-size: 1rem;
+    padding: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    outline: none;
+    font-weight: 600;
+    width: 100%;
+
+    &:first-child {
+      text-transform: capitalize;
+    }
+
+    &:focus {
+      border-color: var(--primary);
+    }
   }
 
   button {
@@ -103,12 +151,5 @@ const Info = styled.div`
       background: rgba(255, 0, 0, 0.7);
       color: #fff;
     }
-  }
-
-  h1 {
-    font-size: 1.5rem;
-    text-transform: capitalize;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
   }
 `;

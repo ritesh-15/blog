@@ -8,6 +8,32 @@ const api = axios.create({
   },
 });
 
+api.interceptors.response.use(
+  (config) => {
+    return config;
+  },
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (
+      error.response.status === 401 &&
+      originalRequest &&
+      !originalRequest._isRetry
+    ) {
+      originalRequest.isRetry = true;
+
+      try {
+        const response = await axios.get("http://localhost:9000/api/refresh", {
+          withCredentials: true,
+        });
+
+        return api.request(originalRequest);
+      } catch (err) {}
+    }
+    throw error;
+  }
+);
+
 export const apiRegister = (data) => api.post("/api/register", data);
 
 export const apiCheckEmail = (email) => api.get(`/api/check-email/${email}`);

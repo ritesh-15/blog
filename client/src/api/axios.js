@@ -4,7 +4,7 @@ const api = axios.create({
   baseURL: "http://localhost:9000",
   withCredentials: true,
   headers: {
-    "Content-type": "application/json",
+    "content-type": "application/json",
   },
 });
 
@@ -41,5 +41,10 @@ export const apiCheckEmail = (email) => api.get(`/api/check-email/${email}`);
 export const apiLogin = (data) => api.post("/api/login", data);
 
 export const apiLogOut = () => api.post("/api/logout");
+
+export const apiUpdateProfileImage = (data) =>
+  api.post("/api/update-profile-image", data);
+
+export const apiUpdateProfile = (data) => api.post("/api/update-profile", data);
 
 export default api;

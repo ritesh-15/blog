@@ -188,7 +188,26 @@ class UserController {
     res.json({ user: null });
   }
 
-  async updateProfile(req, res) {}
+  async updateProfile(req, res) {
+    const { name, email } = req.body;
+
+    const id = req.user._id;
+
+    const user = await userService.findUser({ _id: id });
+
+    try {
+      await userService.updateUserName(id, name);
+      await userService.updateUserEmail(id, email);
+      user.userName = name;
+      user.email = email;
+    } catch (err) {
+      return res.status(500).json({ message: "Internal server error!" });
+    }
+
+    const updatedUser = new UserDto(user);
+
+    return res.json({ user: updatedUser });
+  }
 }
 
 export default new UserController();

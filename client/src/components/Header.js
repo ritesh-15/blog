@@ -29,12 +29,10 @@ function Header() {
             <Link to={`/profile/${user._id}`}>
               <p>{user.name}</p>
             </Link>
-
             {user.avatar && (
-              <img
-                src="https://source.unsplash.com/1600x900/?nature,water"
-                alt=""
-              />
+              <Link to={`/profile/${user._id}`}>
+                <img src={user.avatar} alt="" />
+              </Link>
             )}
           </>
         )}

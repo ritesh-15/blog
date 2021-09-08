@@ -3,6 +3,7 @@ import cors from "cors";
 import { config } from "dotenv";
 import { connection } from "./db.js";
 import authRouter from "./routes/auth-routes.js";
+import fileRouter from "./routes/file-routes.js";
 import cookieParser from "cookie-parser";
 
 config();
@@ -19,11 +20,12 @@ app.use(
 );
 
 app.use(cookieParser());
-
+app.use("/uploads", express.static("uploads"));
 app.use(express.json());
 
 connection();
 
 app.use("/api", authRouter);
+app.use("/api", fileRouter);
 
 app.listen(PORT, () => console.log(`Server started on ${PORT}`));

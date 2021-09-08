@@ -16,4 +16,6 @@ router.post("/logout", userController.logout);
 
 router.post("/update-profile", authMiddleware, userController.updateProfile);
 
+router.post("/forgot-password", userController.forgotPassword);
+
 export default router;

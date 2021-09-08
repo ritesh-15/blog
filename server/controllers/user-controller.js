@@ -2,6 +2,7 @@ import userService from "../services/user-service.js";
 import bcrypt from "bcrypt";
 import tokenService from "../services/token-service.js";
 import UserDto from "../dtos/user-dto.js";
+import emailService from "../services/email-service.js";
 
 class UserController {
   async register(req, res) {
@@ -207,6 +208,24 @@ class UserController {
     const updatedUser = new UserDto(user);
 
     return res.json({ user: updatedUser });
+  }
+
+  async forgotPassword(req, res) {
+    const { email } = req.body;
+
+    if (!email) return res.status(400).json({ message: "Bad request!" });
+
+    const user = await userService.findUser({ email });
+
+    if (!user) return res.status(404).json({ message: "No user found!" });
+
+    const token = await tokenService.getPasswordLink({ _id: user._id });
+
+    const sendEmail = await emailService.sendMail(email, token);
+
+    if (sendEmail) return res.json({ message: "Email send!" });
+
+    return res.status(400).json({ message: "Email not send!" });
   }
 }
 

@@ -34,6 +34,14 @@ class TokenService {
   async removeToken(token) {
     return await Token.deleteOne({ token });
   }
+
+  async getPasswordLink(data) {
+    const accessToken = await jwt.sign(data, process.env.ACCESS_TOKEN, {
+      expiresIn: "15m",
+    });
+
+    return accessToken;
+  }
 }
 
 export default new TokenService();

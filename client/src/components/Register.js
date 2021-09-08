@@ -10,6 +10,13 @@ function Register() {
   const [error, setError] = useState("");
   const { setUser } = useContext(userContext);
   const [loading, setLoading] = useState(false);
+  const [unMounted, setUnmounted] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      setUnmounted(true);
+    };
+  }, []);
 
   const checkEmail = async () => {
     try {
@@ -23,16 +30,20 @@ function Register() {
   const register = async (e) => {
     e.preventDefault();
 
+    if (!name || !email || !password) {
+      setError("Please fill information!");
+      return;
+    }
+
     setLoading(true);
-
-    if (!name || !email || !password) return;
-
     try {
       const { data } = await apiRegister({ name, email, password });
 
-      setUser(data.user);
-      setError("");
+      if (unMounted) {
+        setUser(data.user);
+      }
       setLoading(false);
+      setError("");
     } catch (error) {
       setError("Something went wrong!");
       setLoading(false);

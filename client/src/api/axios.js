@@ -47,4 +47,7 @@ export const apiUpdateProfileImage = (data) =>
 
 export const apiUpdateProfile = (data) => api.post("/api/update-profile", data);
 
+export const apiForgotPassword = (data) =>
+  api.post("/api/forgot-password", data);
+
 export default api;

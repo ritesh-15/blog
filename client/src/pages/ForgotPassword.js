@@ -1,39 +1,30 @@
-import styled from "styled-components";
-import userContext from "../context/user/userContext";
-import { useContext, useState } from "react";
-import { apiLogin } from "../api/axios";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
+import { apiForgotPassword } from "../api/axios";
 
-function Login() {
+function ForgotPassword() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const { setUser } = useContext(userContext);
-  const [loading, setLoading] = useState(false);
 
-  const login = async (e) => {
+  const sendLink = async (e) => {
     e.preventDefault();
 
-    if (!email || !password) {
-      setError("Please fill information!");
-      return;
-    }
-    setLoading(true);
+    if (!email) return;
 
     try {
-      const { data } = await apiLogin({ email, password });
-
-      setLoading(false);
-      setUser(data.user);
+      const { data } = await apiForgotPassword({ email });
+      console.log(data);
     } catch (err) {
-      setLoading(false);
-      setError("Wrong credentials!");
+      setError("Something went wrong please try again!");
     }
   };
 
   return (
     <Container>
       <form>
+        <h1>Forgot password</h1>
         <div>
           <input
             value={email}
@@ -43,34 +34,42 @@ function Login() {
             placeholder="Email address"
           />
         </div>
-        <div>
-          <input
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            type="password"
-            placeholder="Password"
-          />
-        </div>
+
+        <h5>Forgot password link is sent to your email</h5>
         {error && <p>{error}</p>}
+
         <div>
-          <Link to="/forgot-password">Forgot password ?</Link>
-          <button disabled={loading ? true : false} onClick={login}>
-            {!loading ? "Login" : "Verifying..."}
-          </button>
+          <Link to="/login">Login</Link>
+          <button onClick={sendLink}>Send Link</button>
         </div>
       </form>
     </Container>
   );
 }
 
-export default Login;
+export default ForgotPassword;
 
 const Container = styled.div`
   padding: 1rem;
+  width: 95%;
+  max-width: 400px;
+  margin: 0 auto;
+  margin-top: 6rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
 
   form {
     width: 100%;
+
+    h1 {
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    h5 {
+      color: green;
+      margin-bottom: 1rem;
+    }
 
     a {
       color: var(--primary);

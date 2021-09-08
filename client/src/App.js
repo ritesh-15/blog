@@ -14,6 +14,7 @@ import userContext from "./context/user/userContext";
 import { useLoadingWithRefresh } from "./hooks/userRefreshHooks";
 import styled from "styled-components";
 import Profile from "./pages/Profile";
+import ForgotPassword from "./pages/ForgotPassword";
 
 function App() {
   const loading = useLoadingWithRefresh();
@@ -37,6 +38,9 @@ function App() {
           </Route>
           <LoginRoute path="/login">
             <Auth />
+          </LoginRoute>
+          <LoginRoute path="/forgot-password">
+            <ForgotPassword />
           </LoginRoute>
           <ProtectedRoute path="/profile/:id">
             <Header />

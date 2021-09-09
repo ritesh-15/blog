@@ -227,6 +227,31 @@ class UserController {
 
     return res.status(400).json({ message: "Email not send!" });
   }
+
+  async changePassword(req, res) {
+    const { token } = req.params;
+
+    if (!token)
+      return res.render("forgot-password", {
+        error: "Unautharised",
+        user: null,
+      });
+
+    try {
+      const auth = await tokenService.verifyAccessToken(token);
+
+      const user = await userService.findUser({ _id: auth._id });
+      return res.render("forgot-password", {
+        error: null,
+        user: user.userName,
+      });
+    } catch (err) {
+      return res.render("forgot-password", {
+        error: "Unautharised",
+        user: null,
+      });
+    }
+  }
 }
 
 export default new UserController();

@@ -14,7 +14,7 @@ class EmailService {
       from: process.env.EMAIL_ADDRESS,
       to: email,
       subject: "Forgot password link",
-      text: `Your forgot password http://localhost:9000/forgot-password/${token}`,
+      text: `Your forgot password http://localhost:9000/api/forgot-password/${token}`,
     };
 
     return await transporter.sendMail(mailOptions);

@@ -11,13 +11,18 @@ function ForgotPassword() {
   const sendLink = async (e) => {
     e.preventDefault();
 
-    if (!email) return;
+    if (!email) {
+      setError("Please enter email address!");
+      return;
+    }
 
     try {
       const { data } = await apiForgotPassword({ email });
-      console.log(data);
+      setMessage("Linke successfully sent!");
+      setError("");
     } catch (err) {
-      setError("Something went wrong please try again!");
+      setMessage("");
+      setError("No user found with this email id!");
     }
   };
 
@@ -35,7 +40,7 @@ function ForgotPassword() {
           />
         </div>
 
-        <h5>Forgot password link is sent to your email</h5>
+        {message && <h5>{message}</h5>}
         {error && <p>{error}</p>}
 
         <div>
@@ -67,7 +72,7 @@ const Container = styled.div`
     }
 
     h5 {
-      color: green;
+      color: var(--primary);
       margin-bottom: 1rem;
     }
 
@@ -99,6 +104,7 @@ const Container = styled.div`
 
     p {
       color: red;
+      margin-bottom: 1rem;
     }
 
     div {

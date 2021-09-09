@@ -18,4 +18,8 @@ router.post("/update-profile", authMiddleware, userController.updateProfile);
 
 router.post("/forgot-password", userController.forgotPassword);
 
+router.get("/forgot-password/:token", userController.changePassword);
+
+router.post("/change-password");
+
 export default router;

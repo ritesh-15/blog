@@ -12,7 +12,7 @@ function Home() {
   const createBlog = () => {
     if (!user) history.push("/login");
 
-    console.log("create");
+    history.push("/create-blog");
   };
 
   return (

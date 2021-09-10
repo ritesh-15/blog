@@ -5,6 +5,7 @@ import { connection } from "./db.js";
 import authRouter from "./routes/auth-routes.js";
 import fileRouter from "./routes/file-routes.js";
 import cookieParser from "cookie-parser";
+import postRouter from "./routes/post-routes.js";
 
 config();
 
@@ -29,5 +30,6 @@ connection();
 
 app.use("/api", authRouter);
 app.use("/api", fileRouter);
+app.use("/api", postRouter);
 
 app.listen(PORT, () => console.log(`Server started on ${PORT}`));

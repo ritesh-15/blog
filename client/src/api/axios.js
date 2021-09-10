@@ -3,9 +3,6 @@ import axios from "axios";
 const api = axios.create({
   baseURL: "http://localhost:9000",
   withCredentials: true,
-  headers: {
-    "content-type": "application/json",
-  },
 });
 
 api.interceptors.response.use(
@@ -49,5 +46,7 @@ export const apiUpdateProfile = (data) => api.post("/api/update-profile", data);
 
 export const apiForgotPassword = (data) =>
   api.post("/api/forgot-password", data);
+
+export const apiNewPost = (data) => api.post("/api/new-post", data);
 
 export default api;

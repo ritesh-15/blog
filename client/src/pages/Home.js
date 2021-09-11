@@ -1,6 +1,7 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import styled from "styled-components";
+
 import Blogs from "../components/Blogs";
 import Catagories from "../components/Catagories";
 import userContext from "../context/user/userContext";

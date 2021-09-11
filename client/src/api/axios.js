@@ -49,4 +49,9 @@ export const apiForgotPassword = (data) =>
 
 export const apiNewPost = (data) => api.post("/api/new-post", data);
 
+export const apiUploadImage = (data) =>
+  api.post("/api/upload-post-image", data);
+
+export const apiGetPosts = () => api.get("/api/get-posts");
+
 export default api;

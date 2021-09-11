@@ -1,25 +1,42 @@
 import { AddOutlined } from "@material-ui/icons";
 import { useState } from "react";
 import styled from "styled-components";
-import api, { apiNewPost } from "../api/axios";
+import { apiNewPost, apiUploadImage } from "../api/axios";
+import { useHistory } from "react-router-dom";
 
 const NewBlog = () => {
   const [image, setImage] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState(false);
+  const history = useHistory();
 
   const publish = async () => {
     if (!title || !description) return;
 
+    setLoading(true);
+
+    let filename = null;
+
     if (image) {
       const formdata = new FormData();
-      formdata.append("file", formdata);
+      formdata.append("file", image);
 
-      try{
-        const filename = await apinew
-      }
-
+      try {
+        const { data } = await apiUploadImage(formdata);
+        filename = data.filename;
+      } catch (err) {}
     }
+
+    try {
+      const { data } = await apiNewPost({
+        title,
+        desc: description,
+        filename: filename ? filename : "",
+      });
+      setLoading(false);
+      history.push("/");
+    } catch (err) {}
   };
 
   return (
@@ -47,7 +64,9 @@ const NewBlog = () => {
 
       <Options>
         <div>
-          <button onClick={publish}>Publish</button>
+          <button disabled={loading ? true : false} onClick={publish}>
+            {loading ? "Posting..." : "Publish"}
+          </button>
         </div>
       </Options>
 
@@ -182,6 +201,10 @@ const Options = styled.div`
       border-radius: 3px;
       display: block;
       margin-left: auto;
+
+      &:disabled {
+        opacity: 0.7;
+      }
     }
   }
 `;

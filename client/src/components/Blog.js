@@ -2,25 +2,13 @@ import styled from "styled-components";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import { Link } from "react-router-dom";
 
-function Blog() {
+function Blog({ title, desc, avatar, user }) {
   return (
     <Container>
-      <img
-        src="https://images.unsplash.com/photo-1492496913980-501348b61469?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTJ8fGJsb2d8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
-        alt=""
-      />
-      <span>Riteshkhore</span>
-      <h1>
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cupiditate,
-        consequuntur?
-      </h1>
-      <p>
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolores,
-        eligendi debitis facilis ipsum ad enim accusamus ratione ab iure
-        excepturi? Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-        Dolores, eligendi debitis facilis ipsum ad enim accusamus ratione ab
-        iure excepturi?
-      </p>
+      <img src={avatar} alt="" />
+      <span>{user}</span>
+      <h1>{title}</h1>
+      <p>{desc}</p>
       <Actions>
         <FavoriteIcon className="like-icon" />
         <button>

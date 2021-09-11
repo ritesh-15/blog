@@ -44,8 +44,6 @@ function Profile() {
       email,
     };
 
-    console.log(changes);
-
     try {
       const { data } = await apiUpdateProfile(changes);
       setUser(data.user);

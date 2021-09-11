@@ -1,15 +1,33 @@
 import styled from "styled-components";
 import Blog from "./Blog";
+import { apiGetPosts } from "../api/axios";
+import { useEffect, useState } from "react";
 
 function Blogs() {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await apiGetPosts();
+        console.log(data.posts);
+        setPosts(data.posts);
+      } catch (err) {
+        console.log(err);
+      }
+    })();
+  }, []);
+
   return (
     <Container>
-      <Blog />
-      <Blog />
-      <Blog />
-      <Blog />
-      <Blog />
-      <Blog />
+      {posts.map(({ title, desc, avatar, userId }) => (
+        <Blog
+          title={title}
+          desc={desc}
+          avatar={avatar}
+          user={userId.userName}
+        />
+      ))}
     </Container>
   );
 }

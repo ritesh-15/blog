@@ -1,7 +1,23 @@
 import styled from "styled-components";
 import FavoriteIcon from "@material-ui/icons/Favorite";
+import { useParams } from "react-router";
+import { useEffect, useState } from "react";
+import moment from "moment";
+import { apiGetPost } from "../api/axios";
 
 function BlogDetail() {
+  const { id } = useParams();
+  const [post, setPost] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await apiGetPost(id);
+        setPost(data.post);
+      } catch (err) {}
+    })();
+  }, [id]);
+
   const like = (e) => {
     const id = document.getElementById("like");
 
@@ -11,96 +27,90 @@ function BlogDetail() {
   return (
     <Container>
       <Image>
-        <img src="https://source.unsplash.com/1600x900/?nature,water" alt="" />
+        <img
+          src={
+            post?.avatar
+              ? post.avatar
+              : "https://source.unsplash.com/1600x900/?nature,water"
+          }
+          alt=""
+        />
       </Image>
 
-      <Title>
-        <h1>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Qui,
-          perferendis.
-        </h1>
-      </Title>
+      {!post ? (
+        <Skeleton>
+          <div></div>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </Skeleton>
+      ) : (
+        <>
+          <Title>
+            <h1>{post?.title}</h1>
+          </Title>
 
-      <Description>
-        <About>
-          <div>
-            <span>Author : </span>
-            <h5>Ritesh khore</h5>
-          </div>
-          <div>
-            <span>Published at : </span>
-            <h5>4 August 2021</h5>
-          </div>
-        </About>
-        <FavoriteIcon
-          id="like"
-          onClick={like}
-          fontSize="large"
-          className="like-icon"
-        />
-      </Description>
+          <Description>
+            <About>
+              <div>
+                <span>Author : </span>
+                <h5>{post?.userId.userName}</h5>
+              </div>
+              <div>
+                <span>Published at : </span>
+                <h5>{moment(post?.createdAt).format("D MMMM YYYY")}</h5>
+              </div>
+            </About>
+            <FavoriteIcon
+              id="like"
+              onClick={like}
+              fontSize="large"
+              className="like-icon"
+            />
+          </Description>
 
-      <Text>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque dolor
-          architecto voluptatibus id tenetur adipisci nostrum fugit quae sequi,
-          alias ut repudiandae obcaecati ipsam maiores libero dicta quos ad
-          molestiae excepturi debitis dolorum numquam eveniet inventore. Soluta
-          neque a illum totam molestias et magnam quis nihil vel voluptate
-          repudiandae aliquid praesentium, asperiores architecto animi?
-          Perspiciatis, reprehenderit. Quibusdam eveniet velit dignissimos quam
-          maiores corporis unde mollitia fugiat excepturi consequatur?
-          Exercitationem natus et, aut excepturi tempora sit sint, atque
-          repudiandae soluta rerum impedit quas amet ipsa modi nemo cumque eum
-          incidunt dignissimos magni! Neque accusantium saepe impedit aliquam
-          veritatis facere laboriosam eaque! Lorem, ipsum dolor sit amet
-          consectetur adipisicing elit. Nemo tempora odio optio rerum eius
-          quidem delectus fuga nisi nulla sunt veniam enim laboriosam pariatur
-          cum quae, ipsa natus perferendis sapiente repudiandae eligendi
-          assumenda obcaecati corporis. Similique nemo asperiores eius doloribus
-          eos ut, exercitationem officia a debitis laboriosam sed corrupti
-          doloremque odio dicta deserunt ipsum labore, minima facilis iusto
-          sapiente sequi tempore? Nam cumque doloribus beatae voluptatibus
-          voluptates optio repudiandae et recusandae atque iste praesentium
-          alias corrupti, exercitationem neque vel provident veritatis mollitia
-          unde architecto inventore quisquam qui impedit. Molestias laborum
-          magnam repellendus quas quam nam eum maxime necessitatibus, quae
-          earum?
-        </p>
-      </Text>
+          <Text>
+            <p>{post?.desc}</p>
+          </Text>
 
-      <Comment>
-        <form>
-          <h1>Comments</h1>
-          <div>
-            <textarea placeholder="Add a comment"></textarea>
-            <button>Post</button>
-          </div>
-        </form>
+          <Comment>
+            <form>
+              <h1>Comments</h1>
+              <div>
+                <textarea placeholder="Add a comment"></textarea>
+                <button>Post</button>
+              </div>
+            </form>
 
-        <AllComments>
-          <div>
-            <span>
-              <h1>Ritesh khore</h1>
-              <span>11:30am</span>
-            </span>
-            <p>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-              Possimus, soluta?
-            </p>
-          </div>
-          <div>
-            <span>
-              <h1>Ritesh khore</h1>
-              <span>11:30am</span>
-            </span>
-            <p>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-              Possimus, soluta?
-            </p>
-          </div>
-        </AllComments>
-      </Comment>
+            <AllComments>
+              <div>
+                <span>
+                  <h1>Ritesh khore</h1>
+                  <span>11:30am</span>
+                </span>
+                <p>
+                  Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                  Possimus, soluta?
+                </p>
+              </div>
+              <div>
+                <span>
+                  <h1>Ritesh khore</h1>
+                  <span>11:30am</span>
+                </span>
+                <p>
+                  Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                  Possimus, soluta?
+                </p>
+              </div>
+            </AllComments>
+          </Comment>
+        </>
+      )}
     </Container>
   );
 }
@@ -244,6 +254,33 @@ const AllComments = styled.div`
       h1 {
         font-weight: 600;
       }
+    }
+  }
+`;
+
+const Skeleton = styled.div`
+  span {
+    animation: loading infinite linear 1s alternate;
+    height: 10px;
+    width: 100%;
+    display: block;
+    margin-top: 1rem;
+    border-radius: 10px;
+
+    &:nth-child(2) {
+      width: 30%;
+    }
+    &:nth-child(3) {
+      width: 50%;
+    }
+    &:nth-child(4) {
+      width: 70%;
+    }
+    &:nth-child(5) {
+      width: 30%;
+    }
+    &:last-child {
+      width: 40%;
     }
   }
 `;

@@ -10,4 +10,6 @@ router.post("/upload-post-image", authMiddleware, postController.uploadImage);
 
 router.get("/get-posts", authMiddleware, postController.getPosts);
 
+router.get("/get-post/:id", authMiddleware, postController.getPost);
+
 export default router;

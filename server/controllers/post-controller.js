@@ -44,6 +44,19 @@ class PostController {
     }
   }
 
+  async getPost(req, res) {
+    const { id } = req.params;
+
+    if (!id) return res.status(400).json({ message: "Bad request!" });
+
+    try {
+      const post = await postService.getPost({ _id: id });
+      return res.status(200).json({ post });
+    } catch (err) {
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+
   async uploadImage(req, res) {
     upload(req, res, (err) => {
       if (err) return res.status(400).json({ message: "Internal error" });

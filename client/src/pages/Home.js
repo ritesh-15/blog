@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import styled from "styled-components";
-
+import { apiGetPosts } from "../api/axios";
 import Blogs from "../components/Blogs";
 import Catagories from "../components/Catagories";
 import userContext from "../context/user/userContext";
@@ -9,6 +9,17 @@ import userContext from "../context/user/userContext";
 function Home() {
   const { user } = useContext(userContext);
   const history = useHistory();
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await apiGetPosts();
+
+        setPosts(data.posts);
+      } catch (err) {}
+    })();
+  }, []);
 
   const createBlog = () => {
     if (!user) history.push("/login");
@@ -28,7 +39,7 @@ function Home() {
 
       <Main>
         <Catagories />
-        <Blogs />
+        <Blogs posts={posts} />
       </Main>
     </Container>
   );

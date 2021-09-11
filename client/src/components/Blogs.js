@@ -1,33 +1,46 @@
 import styled from "styled-components";
 import Blog from "./Blog";
-import { apiGetPosts } from "../api/axios";
-import { useEffect, useState } from "react";
 
-function Blogs() {
-  const [posts, setPosts] = useState([]);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const { data } = await apiGetPosts();
-        console.log(data.posts);
-        setPosts(data.posts);
-      } catch (err) {
-        console.log(err);
-      }
-    })();
-  }, []);
-
+function Blogs({ posts }) {
+  console.log(posts.lenght);
   return (
     <Container>
-      {posts.map(({ title, desc, avatar, userId }) => (
-        <Blog
-          title={title}
-          desc={desc}
-          avatar={avatar}
-          user={userId.userName}
-        />
-      ))}
+      {posts.length ? (
+        posts.map(({ title, desc, avatar, userId, _id }) => (
+          <Blog
+            key={_id}
+            title={title}
+            desc={desc}
+            avatar={avatar}
+            user={userId.userName}
+            _id={_id}
+          />
+        ))
+      ) : (
+        <>
+          <Skeleton>
+            <div></div>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </Skeleton>
+          <Skeleton>
+            <div></div>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </Skeleton>
+          <Skeleton>
+            <div></div>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </Skeleton>
+        </>
+      )}
     </Container>
   );
 }
@@ -39,4 +52,32 @@ const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   grid-gap: 1rem;
+`;
+
+const Skeleton = styled.div`
+  div {
+    animation: loading infinite linear 1s alternate;
+    height: 200px;
+    margin-bottom: 1rem;
+    border-radius: 10px;
+  }
+
+  span {
+    animation: loading infinite linear 1s alternate;
+    height: 10px;
+    width: 100%;
+    display: block;
+    margin-bottom: 1rem;
+    border-radius: 15px;
+
+    &:nth-child(2) {
+      width: 30%;
+    }
+    &:nth-child(4) {
+      width: 70%;
+    }
+    &:nth-child(5) {
+      width: 50%;
+    }
+  }
 `;

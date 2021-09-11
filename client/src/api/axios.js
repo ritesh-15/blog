@@ -54,4 +54,6 @@ export const apiUploadImage = (data) =>
 
 export const apiGetPosts = () => api.get("/api/get-posts");
 
+export const apiGetPost = (id) => api.get(`/api/get-post/${id}`);
+
 export default api;

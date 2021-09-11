@@ -2,7 +2,7 @@ import styled from "styled-components";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import { Link } from "react-router-dom";
 
-function Blog({ title, desc, avatar, user }) {
+function Blog({ title, desc, avatar, user, _id }) {
   return (
     <Container>
       <img src={avatar} alt="" />
@@ -12,7 +12,7 @@ function Blog({ title, desc, avatar, user }) {
       <Actions>
         <FavoriteIcon className="like-icon" />
         <button>
-          <Link to="/blog/5">Read more...</Link>
+          <Link to={`/blog/${_id}`}>Read more...</Link>
         </button>
       </Actions>
     </Container>
@@ -41,6 +41,7 @@ const Container = styled.div`
     height: 200px;
     object-fit: cover;
     margin-bottom: 1rem;
+    animation: loading infinite linear 1s alternate;
   }
 
   span {

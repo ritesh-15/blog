@@ -27,14 +27,7 @@ function BlogDetail() {
   return (
     <Container>
       <Image>
-        <img
-          src={
-            post?.avatar
-              ? post.avatar
-              : "https://source.unsplash.com/1600x900/?nature,water"
-          }
-          alt=""
-        />
+        <img src={post?.avatar} alt="" />
       </Image>
 
       {!post ? (
@@ -127,6 +120,7 @@ const Image = styled.div`
   width: 100%;
   height: 400px;
   border-radius: 10px;
+  border: none;
   overflow: hidden;
   animation: loading linear infinite 1s alternate;
 
@@ -138,6 +132,7 @@ const Image = styled.div`
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border: none;
   }
 `;
 

@@ -8,6 +8,7 @@ const NewBlog = () => {
   const [image, setImage] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [catagory, setCatagory] = useState("");
   const [loading, setLoading] = useState(false);
   const history = useHistory();
 
@@ -32,6 +33,7 @@ const NewBlog = () => {
       const { data } = await apiNewPost({
         title,
         desc: description,
+        catagory,
         filename: filename ? filename : "",
       });
       setLoading(false);
@@ -63,8 +65,24 @@ const NewBlog = () => {
       </Image>
 
       <Options>
+        <select onChange={(e) => setCatagory(e.target.value)}>
+          <option value="">Select blog catagory</option>
+          <option value="music">Music</option>
+          <option value="tech">Tech</option>
+          <option value="movie">Movie</option>
+          <option value="entertenment">Entertenment</option>
+          <option value="sport">Sport</option>
+        </select>
+
         <div>
-          <button disabled={loading ? true : false} onClick={publish}>
+          <button
+            disabled={
+              loading || !title || !description || !image || !catagory
+                ? true
+                : false
+            }
+            onClick={publish}
+          >
             {loading ? "Posting..." : "Publish"}
           </button>
         </div>
@@ -186,9 +204,19 @@ const Description = styled.div`
 const Options = styled.div`
   width: 100%;
   margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  select {
+    font-size: 1rem;
+    outline: none;
+    border: 1px solid var(--primary);
+    padding: 0.7rem 1rem;
+  }
 
   div {
-    margin-left: auto;
+    margin-left: 1rem;
 
     button {
       padding: 0.7rem 2rem;
@@ -203,6 +231,7 @@ const Options = styled.div`
       margin-left: auto;
 
       &:disabled {
+        cursor: not-allowed;
         opacity: 0.7;
       }
     }

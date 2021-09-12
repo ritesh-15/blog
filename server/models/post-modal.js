@@ -23,6 +23,10 @@ const PostSchema = mongoose.Schema(
       type: String,
       default: 0,
     },
+    catagory: {
+      type: String,
+      default: "",
+    },
   },
   {
     timestamps: true,

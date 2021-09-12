@@ -16,13 +16,14 @@ const upload = multer({ storage }).single("file");
 
 class PostController {
   async newPost(req, res) {
-    const { title, desc, filename } = req.body;
+    const { title, desc, filename, catagory } = req.body;
 
     if (!title || !desc) return res.status(400).json({ mesage: "Bad request" });
 
     const data = {
       title,
       desc,
+      catagory,
       userId: req.user._id,
       avatar: filename ? `http://localhost:9000/storage/${filename}` : "",
     };

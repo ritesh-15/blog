@@ -62,6 +62,7 @@ p {
 }
 
 .like {
+  cursor: pointer;
   color: var(--primary);
 }
 
@@ -81,5 +82,32 @@ p {
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+.delete-icon {
+  margin-left: 1rem;
+  cursor: pointer;
+  color: rgba(255, 0, 0, 0.671);
+}
+
+/* Message */
+.close-message {
+  transform: translateY(-150%);
+}
+
+.like-animation {
+  animation: like-animation 1 ease 250ms;
+}
+
+@keyframes like-animation {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
   }
 }

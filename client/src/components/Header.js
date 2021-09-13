@@ -2,42 +2,46 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import userContext from "../context/user/userContext";
+import Message from "./Message";
 
 function Header() {
   const { user } = useContext(userContext);
 
   return (
-    <Container>
-      <Center>
-        <Link to="/">
-          <span>Home</span>
-        </Link>
-        <a>
-          <span>About</span>
-        </a>
-        <a>
-          <span>Contact Us</span>
-        </a>
-      </Center>
-      <User>
-        {!user ? (
-          <Link to="/login">
-            <button>Login</button>
+    <>
+      <Message />
+      <Container>
+        <Center>
+          <Link to="/">
+            <span>Home</span>
           </Link>
-        ) : (
-          <>
-            <Link to={`/profile/${user._id}`}>
-              <p>{user.name}</p>
+          <a>
+            <span>About</span>
+          </a>
+          <a>
+            <span>Contact Us</span>
+          </a>
+        </Center>
+        <User>
+          {!user ? (
+            <Link to="/login">
+              <button>Login</button>
             </Link>
-            {user.avatar && (
+          ) : (
+            <>
               <Link to={`/profile/${user._id}`}>
-                <img src={user.avatar} alt="" />
+                <p>{user.userName}</p>
               </Link>
-            )}
-          </>
-        )}
-      </User>
-    </Container>
+              {user.avatar && (
+                <Link to={`/profile/${user._id}`}>
+                  <img src={user.avatar} alt="" />
+                </Link>
+              )}
+            </>
+          )}
+        </User>
+      </Container>
+    </>
   );
 }
 

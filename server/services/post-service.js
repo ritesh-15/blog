@@ -5,11 +5,21 @@ class PostService {
     return await Post.create(data);
   }
   async allPosts() {
-    return await Post.find().populate("userId", "-password");
+    return await Post.find()
+      .populate("userId", "-password")
+      .sort({ createdAt: "-1" });
   }
 
   async getPost(query) {
     return await Post.findOne(query).populate("userId", "-password");
+  }
+
+  async getUserPosts(id) {
+    return await Post.find({ userId: id }).populate("userId", "-password");
+  }
+
+  async deletePost(id) {
+    return await Post.deleteOne({ _id: id });
   }
 }
 

@@ -5,21 +5,12 @@ import { apiGetPosts } from "../api/axios";
 import Blogs from "../components/Blogs";
 import Catagories from "../components/Catagories";
 import userContext from "../context/user/userContext";
+import blogContext from "../context/blogs/blogContext";
 
 function Home() {
   const { user } = useContext(userContext);
   const history = useHistory();
-  const [posts, setPosts] = useState([]);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const { data } = await apiGetPosts();
-
-        setPosts(data.posts);
-      } catch (err) {}
-    })();
-  }, []);
+  const { blogs } = useContext(blogContext);
 
   const createBlog = () => {
     if (!user) history.push("/login");
@@ -39,7 +30,7 @@ function Home() {
 
       <Main>
         <Catagories />
-        <Blogs posts={posts} />
+        <Blogs posts={blogs} />
       </Main>
     </Container>
   );

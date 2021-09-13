@@ -1,8 +1,10 @@
 import { AddOutlined } from "@material-ui/icons";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import styled from "styled-components";
 import { apiNewPost, apiUploadImage } from "../api/axios";
 import { useHistory } from "react-router-dom";
+import blogContext from "../context/blogs/blogContext";
+import userContext from "../context/user/userContext";
 
 const NewBlog = () => {
   const [image, setImage] = useState("");
@@ -11,6 +13,8 @@ const NewBlog = () => {
   const [catagory, setCatagory] = useState("");
   const [loading, setLoading] = useState(false);
   const history = useHistory();
+  const { setBlogs } = useContext(blogContext);
+  const { user } = useContext(userContext);
 
   const publish = async () => {
     if (!title || !description) return;
@@ -36,6 +40,12 @@ const NewBlog = () => {
         catagory,
         filename: filename ? filename : "",
       });
+
+      console.log(user);
+
+      data.post.userId = user;
+
+      setBlogs((blog) => [data.post, ...blog]);
       setLoading(false);
       history.push("/");
     } catch (err) {}
@@ -170,7 +180,7 @@ const Title = styled.div`
     outline: none;
     padding: 1rem 0;
     font-size: 1.5rem;
-    font-weight: 500;
+    font-weight: 600;
     resize: none;
     border-radius: 10px;
 

@@ -1,6 +1,7 @@
 import postService from "../services/post-service.js";
 import multer from "multer";
 import path from "path";
+import likeService from "../services/like-service.js";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -66,6 +67,80 @@ class PostController {
 
       return res.status(200).json({ filename: req.file.filename });
     });
+  }
+
+  async userPosts(req, res) {
+    const id = req.user._id;
+
+    try {
+      const posts = await postService.getUserPosts(id);
+      return res.status(200).json({ posts });
+    } catch (err) {
+      return res.status(500).json({ message: "Internal error" });
+    }
+  }
+
+  async deletePost(req, res) {
+    const { id } = req.params;
+    if (!id) return res.status(400).json({ message: "Bad request!" });
+
+    try {
+      const deletePost = await postService.deletePost(id);
+      return res.json({ deletePost });
+    } catch (error) {
+      return res.status(500).json({ message: "Internal error" });
+    }
+  }
+
+  async likePost(req, res) {
+    const { id } = req.params;
+
+    if (!id) return res.status(400).json({ message: "Bad request!" });
+
+    try {
+      const like = await likeService.like({ postId: id, userId: req.user._id });
+      return res.status(200).json({ like });
+    } catch (err) {
+      return res.status(500).json({ message: "Internal server error!" });
+    }
+  }
+  async unLikePost(req, res) {
+    const { id } = req.params;
+
+    if (!id) return res.status(400).json({ message: "Bad request!" });
+
+    try {
+      const unlike = await likeService.unLike(id, req.user._id);
+      return res.status(200).json({ unlike });
+    } catch (err) {
+      return res.status(500).json({ message: "Internal server error!" });
+    }
+  }
+
+  async isLiked(req, res) {
+    const { id } = req.params;
+
+    if (!id) return res.status(400).json({ message: "Bad request!" });
+
+    try {
+      const likeduser = await likeService.get(id, req.user._id);
+      return res.status(200).json({ likeduser });
+    } catch (err) {
+      return res.status(500).json({ message: "Internal server error!" });
+    }
+  }
+
+  async getTotalLikes(req, res) {
+    const { id } = req.params;
+
+    if (!id) return res.status(400).json({ message: "Bad request!" });
+
+    try {
+      const likes = await likeService.getLikes(id);
+      return res.status(200).json({ likes: likes.length });
+    } catch (err) {
+      return res.status(500).json({ message: "Internal server error!" });
+    }
   }
 }
 

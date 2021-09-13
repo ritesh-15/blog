@@ -1,16 +1,108 @@
 import styled from "styled-components";
 import FavoriteIcon from "@material-ui/icons/Favorite";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { Delete } from "@material-ui/icons";
+import { useContext, useState, useEffect } from "react";
+import userContext from "../context/user/userContext";
+import {
+  apiDeletePost,
+  apiIsLikedPost,
+  apiLikePost,
+  apiTotalLikes,
+  apiUnLikePost,
+} from "../api/axios";
+import blogContext from "../context/blogs/blogContext";
+import { FavoriteOutlined } from "@material-ui/icons";
 
-function Blog({ title, desc, avatar, user, _id }) {
+function Blog({ title, desc, avatar, userInfo, _id, catagory }) {
+  const { user } = useContext(userContext);
+  const { blogs, setBlogs } = useContext(blogContext);
+  const [like, setLike] = useState(false);
+  const [likes, setLikes] = useState(0);
+  const history = useHistory();
+
+  const deletePost = async () => {
+    try {
+      await apiDeletePost(_id);
+      const deleteBlog = blogs.filter((blog) => blog._id === _id);
+      const index = blogs.indexOf(deleteBlog[0]);
+      blogs.splice(index, 1);
+      setBlogs([]);
+      setBlogs(blogs);
+    } catch (err) {}
+  };
+
+  const changeLike = async () => {
+    if (!user) {
+      history.push("/login");
+      return;
+    }
+
+    if (like) {
+      setLike(false);
+
+      try {
+        await apiUnLikePost(_id);
+      } catch (error) {}
+      return;
+    }
+
+    setLike(true);
+
+    try {
+      await apiLikePost(_id);
+    } catch (error) {}
+    return;
+  };
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await apiIsLikedPost(_id);
+        if (data.likeduser) {
+          setLike(true);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    })();
+  }, [_id]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await apiTotalLikes(_id);
+        setLikes(data.likes);
+      } catch (err) {
+        console.log(err);
+      }
+    })();
+  }, [like, _id]);
+
   return (
     <Container>
       <img src={avatar} alt="" />
-      <span>{user}</span>
+      <span>
+        <small>{userInfo.userName}</small>
+        <h4>{catagory}</h4>
+      </span>
       <h1>{title}</h1>
       <p>{desc}</p>
       <Actions>
-        <FavoriteIcon className="like-icon" />
+        <div>
+          {like ? (
+            <FavoriteOutlined
+              onClick={changeLike}
+              className="like like-animation"
+            />
+          ) : (
+            <FavoriteIcon onClick={changeLike} className="like-icon " />
+          )}
+          <p>{likes}</p>
+          {userInfo._id === user?._id && (
+            <Delete onClick={deletePost} className="delete-icon" />
+          )}
+        </div>
         <button>
           <Link to={`/blog/${_id}`}>Read more...</Link>
         </button>
@@ -23,6 +115,7 @@ export default Blog;
 
 const Container = styled.div`
   width: 100%;
+  max-width: 500px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   max-height: 400px;
   overflow: hidden;
@@ -45,9 +138,19 @@ const Container = styled.div`
   }
 
   span {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 0 1rem;
-    font-size: 0.85rem;
-    opacity: 0.7;
+
+    small {
+      text-transform: capitalize;
+    }
+
+    h4 {
+      font-weight: 500;
+      text-transform: capitalize;
+    }
   }
 
   h1 {
@@ -74,6 +177,16 @@ const Actions = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 0 1rem;
+
+  div {
+    display: flex;
+
+    p {
+      padding: 0;
+      height: fit-content;
+      margin-left: 10px;
+    }
+  }
 
   button {
     background: #fff;

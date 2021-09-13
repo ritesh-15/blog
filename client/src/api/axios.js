@@ -56,4 +56,16 @@ export const apiGetPosts = () => api.get("/api/get-posts");
 
 export const apiGetPost = (id) => api.get(`/api/get-post/${id}`);
 
+export const apiGetUserPosts = () => api.get("/api/get-user-posts");
+
+export const apiDeletePost = (id) => api.post(`/api/delete-post/${id}`);
+
+export const apiLikePost = (id) => api.post(`/api/like-post/${id}`);
+
+export const apiUnLikePost = (id) => api.post(`/api/unlike-post/${id}`);
+
+export const apiIsLikedPost = (id) => api.get(`/api/is-liked/${id}`);
+
+export const apiTotalLikes = (id) => api.get(`/api/total-likes/${id}`);
+
 export default api;

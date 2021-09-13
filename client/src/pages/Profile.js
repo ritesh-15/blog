@@ -1,27 +1,37 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import {
   apiCheckEmail,
+  apiGetUserPosts,
   apiLogOut,
   apiUpdateProfile,
   apiUpdateProfileImage,
 } from "../api/axios";
 import Blogs from "../components/Blogs";
 import userContext from "../context/user/userContext";
+import { Link } from "react-router-dom";
 
 function Profile() {
   const { user, setUser } = useContext(userContext);
   const [name, setName] = useState(user?.name);
   const [email, setEmail] = useState(user?.email);
   const [error, setError] = useState("");
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await apiGetUserPosts();
+        setPosts(data.posts);
+      } catch (err) {}
+    })();
+  }, []);
 
   const logOut = async () => {
     try {
       const { data } = await apiLogOut();
       setUser(data.user);
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
   const updateProfile = async (e) => {
@@ -111,7 +121,7 @@ function Profile() {
         </Info>
       </Details>
 
-      <Blogs />
+      <Blogs posts={posts} />
     </Container>
   );
 }
@@ -214,5 +224,26 @@ const Info = styled.div`
       background: rgba(255, 0, 0, 0.7);
       color: #fff;
     }
+  }
+`;
+
+const Message = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 6rem;
+
+  h1 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  a {
+    background: transparent;
+    padding: 0.7rem 1rem;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    font-weight: 600;
   }
 `;

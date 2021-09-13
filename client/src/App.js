@@ -9,16 +9,28 @@ import {
 } from "react-router-dom";
 import BlogDetail from "./pages/BlogDetail";
 import Auth from "./pages/Auth";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import userContext from "./context/user/userContext";
 import { useLoadingWithRefresh } from "./hooks/userRefreshHooks";
 import styled from "styled-components";
 import Profile from "./pages/Profile";
 import ForgotPassword from "./pages/ForgotPassword";
 import NewBlog from "./pages/NewBlog";
+import blogContext from "./context/blogs/blogContext";
+import { apiGetPosts } from "./api/axios";
 
 function App() {
   const loading = useLoadingWithRefresh();
+  const { setBlogs, blogs } = useContext(blogContext);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await apiGetPosts();
+        setBlogs(data.posts);
+      } catch (err) {}
+    })();
+  }, []);
 
   return loading ? (
     <Loading>

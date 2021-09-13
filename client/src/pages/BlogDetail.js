@@ -1,13 +1,23 @@
 import styled from "styled-components";
 import FavoriteIcon from "@material-ui/icons/Favorite";
-import { useParams } from "react-router";
-import { useEffect, useState } from "react";
+import { useHistory, useParams } from "react-router";
+import { useContext, useEffect, useState } from "react";
 import moment from "moment";
-import { apiGetPost } from "../api/axios";
+import {
+  apiGetPost,
+  apiIsLikedPost,
+  apiLikePost,
+  apiUnLikePost,
+} from "../api/axios";
+import { Delete, FavoriteOutlined } from "@material-ui/icons";
+import userContext from "../context/user/userContext";
 
 function BlogDetail() {
   const { id } = useParams();
   const [post, setPost] = useState(null);
+  const { user } = useContext(userContext);
+  const [like, setLike] = useState(false);
+  const history = useHistory();
 
   useEffect(() => {
     (async () => {
@@ -18,10 +28,38 @@ function BlogDetail() {
     })();
   }, [id]);
 
-  const like = (e) => {
-    const id = document.getElementById("like");
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await apiIsLikedPost(id);
+        if (data.likeduser) {
+          setLike(true);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    })();
+  }, [id]);
 
-    id.classList.toggle("like");
+  const changeLike = async () => {
+    if (!user) {
+      history.push("/login");
+      return;
+    }
+
+    if (like) {
+      setLike(false);
+      try {
+        await apiUnLikePost(id);
+      } catch (error) {}
+      return;
+    }
+
+    setLike(true);
+    try {
+      await apiLikePost(id);
+    } catch (error) {}
+    return;
   };
 
   return (
@@ -33,10 +71,6 @@ function BlogDetail() {
       {!post ? (
         <Skeleton>
           <div></div>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
           <span></span>
           <span></span>
           <span></span>
@@ -54,16 +88,32 @@ function BlogDetail() {
                 <h5>{post?.userId.userName}</h5>
               </div>
               <div>
+                <span>Catagory : </span>
+                <h5>{post?.catagory}</h5>
+              </div>
+              <div>
                 <span>Published at : </span>
                 <h5>{moment(post?.createdAt).format("D MMMM YYYY")}</h5>
               </div>
             </About>
-            <FavoriteIcon
-              id="like"
-              onClick={like}
-              fontSize="large"
-              className="like-icon"
-            />
+            <span>
+              {like ? (
+                <FavoriteOutlined
+                  onClick={changeLike}
+                  fontSize="large"
+                  className="like like-animation"
+                />
+              ) : (
+                <FavoriteIcon
+                  onClick={changeLike}
+                  fontSize="large"
+                  className="like-icon "
+                />
+              )}
+              {post?.userId._id === user?._id && (
+                <Delete fontSize="large" className="delete-icon" />
+              )}
+            </span>
           </Description>
 
           <Text>
@@ -120,8 +170,7 @@ const Image = styled.div`
   width: 100%;
   height: 400px;
   border-radius: 10px;
-  border: none;
-  overflow: hidden;
+  /* overflow: hidden; */
   animation: loading linear infinite 1s alternate;
 
   @media (max-width: 768px) {
@@ -132,7 +181,7 @@ const Image = styled.div`
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border: none;
+    border-radius: 10px;
   }
 `;
 
@@ -154,6 +203,11 @@ const Description = styled.div`
   line-height: 1.5;
   color: rgba(0, 0, 0, 0.8);
   margin-top: 1rem;
+
+  span {
+    display: flex;
+    align-items: center;
+  }
 `;
 
 const About = styled.div`
@@ -162,6 +216,7 @@ const About = styled.div`
 
     h5 {
       margin-left: 10px;
+      text-transform: capitalize;
     }
   }
 `;

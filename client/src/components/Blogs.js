@@ -2,17 +2,17 @@ import styled from "styled-components";
 import Blog from "./Blog";
 
 function Blogs({ posts }) {
-  console.log(posts.lenght);
   return (
     <Container>
       {posts.length ? (
-        posts.map(({ title, desc, avatar, userId, _id }) => (
+        posts.map(({ title, desc, avatar, userId, _id, catagory }) => (
           <Blog
             key={_id}
             title={title}
             desc={desc}
             avatar={avatar}
-            user={userId.userName}
+            userInfo={userId}
+            catagory={catagory}
             _id={_id}
           />
         ))
@@ -52,6 +52,10 @@ const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   grid-gap: 1rem;
+
+  @media (max-width: 768px) {
+    padding: 1rem 0;
+  }
 `;
 
 const Skeleton = styled.div`

@@ -4,20 +4,43 @@ import { useHistory, useParams } from "react-router";
 import { useContext, useEffect, useState } from "react";
 import moment from "moment";
 import {
+  apiDeletePost,
+  apiGetComments,
   apiGetPost,
   apiIsLikedPost,
   apiLikePost,
+  apiNewComment,
+  apiTotalLikes,
   apiUnLikePost,
 } from "../api/axios";
-import { Delete, FavoriteOutlined } from "@material-ui/icons";
+import { Delete, Edit, FavoriteOutlined } from "@material-ui/icons";
 import userContext from "../context/user/userContext";
+import blogContext from "../context/blogs/blogContext";
+import { Link } from "react-router-dom";
+import socketContext from "../context/socket/socketContext";
 
 function BlogDetail() {
   const { id } = useParams();
   const [post, setPost] = useState(null);
   const { user } = useContext(userContext);
   const [like, setLike] = useState(false);
+  const [likes, setLikes] = useState(0);
   const history = useHistory();
+  const { blogs, setBlogs } = useContext(blogContext);
+  const [message, setMessage] = useState("");
+  const [comments, setComments] = useState([]);
+  const { socket } = useContext(socketContext);
+  const [sending, setSending] = useState(false);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.emit("join-blog", id);
+
+    return () => {
+      socket.off();
+    };
+  }, [id, socket]);
 
   useEffect(() => {
     (async () => {
@@ -35,11 +58,18 @@ function BlogDetail() {
         if (data.likeduser) {
           setLike(true);
         }
-      } catch (err) {
-        console.log(err);
-      }
+      } catch (err) {}
     })();
   }, [id]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await apiTotalLikes(id);
+        setLikes(data.likes);
+      } catch (err) {}
+    })();
+  }, [id, post]);
 
   const changeLike = async () => {
     if (!user) {
@@ -60,6 +90,61 @@ function BlogDetail() {
       await apiLikePost(id);
     } catch (error) {}
     return;
+  };
+
+  const deletePost = async () => {
+    try {
+      await apiDeletePost(id);
+      history.push("/");
+      const deleteBlog = blogs.filter((blog) => blog._id === id);
+      const index = blogs.indexOf(deleteBlog[0]);
+      blogs.splice(index, 1);
+      setBlogs([]);
+      setBlogs(blogs);
+    } catch (err) {}
+  };
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await apiGetComments(id);
+        setComments(data.comments);
+      } catch (err) {}
+    })();
+  }, [id]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on("new-comment", (comment) => {
+      setComments((c) => [comment, ...c]);
+    });
+
+    return () => {
+      socket.off();
+    };
+  }, [socket, comments]);
+
+  const postComment = async (e) => {
+    e.preventDefault();
+
+    if (!user) {
+      history.push("/login");
+      return;
+    }
+
+    setSending(true);
+
+    try {
+      const { data } = await apiNewComment(id, { message });
+      const comment = data.comment;
+      comment.userId = user;
+      socket.emit("new-comment", comment);
+      setMessage("");
+      setSending(false);
+    } catch (err) {
+      setSending(false);
+    }
   };
 
   return (
@@ -97,6 +182,12 @@ function BlogDetail() {
               </div>
             </About>
             <span>
+              {post?.userId._id === user?._id && (
+                <Link to={`/update/${post._id}`}>
+                  <Edit className="edit-icon" fontSize="large" />
+                </Link>
+              )}
+
               {like ? (
                 <FavoriteOutlined
                   onClick={changeLike}
@@ -110,8 +201,13 @@ function BlogDetail() {
                   className="like-icon "
                 />
               )}
+              {post?.userId._id === user?._id && <p>{likes}</p>}
               {post?.userId._id === user?._id && (
-                <Delete fontSize="large" className="delete-icon" />
+                <Delete
+                  onClick={deletePost}
+                  fontSize="large"
+                  className="delete-icon"
+                />
               )}
             </span>
           </Description>
@@ -124,32 +220,31 @@ function BlogDetail() {
             <form>
               <h1>Comments</h1>
               <div>
-                <textarea placeholder="Add a comment"></textarea>
-                <button>Post</button>
+                <textarea
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Add a comment"
+                ></textarea>
+                <button
+                  disabled={sending || !message ? true : false}
+                  onClick={postComment}
+                  type="submit"
+                >
+                  {sending ? "Posting..." : "Post"}
+                </button>
               </div>
             </form>
 
             <AllComments>
-              <div>
-                <span>
-                  <h1>Ritesh khore</h1>
-                  <span>11:30am</span>
-                </span>
-                <p>
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                  Possimus, soluta?
-                </p>
-              </div>
-              <div>
-                <span>
-                  <h1>Ritesh khore</h1>
-                  <span>11:30am</span>
-                </span>
-                <p>
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                  Possimus, soluta?
-                </p>
-              </div>
+              {comments.map(({ message, userId, _id, createdAt }) => (
+                <div key={_id}>
+                  <span>
+                    <h1>{userId.userName}</h1>
+                    <span>{moment(createdAt).format("hh:mm:A")}</span>
+                  </span>
+                  <p>{message}</p>
+                </div>
+              ))}
             </AllComments>
           </Comment>
         </>
@@ -170,7 +265,7 @@ const Image = styled.div`
   width: 100%;
   height: 400px;
   border-radius: 10px;
-  /* overflow: hidden; */
+  overflow: hidden;
   animation: loading linear infinite 1s alternate;
 
   @media (max-width: 768px) {
@@ -207,6 +302,11 @@ const Description = styled.div`
   span {
     display: flex;
     align-items: center;
+
+    p {
+      margin-left: 10px;
+      font-size: 1.25rem;
+    }
   }
 `;
 
@@ -276,6 +376,11 @@ const Comment = styled.div`
         display: block;
         font-weight: 600;
         background: var(--primary);
+
+        &:disabled {
+          opacity: 0.7;
+          cursor: default;
+        }
       }
     }
   }

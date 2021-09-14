@@ -1,12 +1,19 @@
 import { AddOutlined } from "@material-ui/icons";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
-import { apiNewPost, apiUploadImage } from "../api/axios";
-import { useHistory } from "react-router-dom";
+import {
+  apiGetPost,
+  apiNewPost,
+  apiUpdatePost,
+  apiUploadImage,
+} from "../api/axios";
+import { useHistory, useParams } from "react-router-dom";
 import blogContext from "../context/blogs/blogContext";
 import userContext from "../context/user/userContext";
 
 const NewBlog = () => {
+  const { id } = useParams();
+  const [post, setPost] = useState(null);
   const [image, setImage] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -16,16 +23,31 @@ const NewBlog = () => {
   const { setBlogs } = useContext(blogContext);
   const { user } = useContext(userContext);
 
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await apiGetPost(id);
+        setPost(data.post);
+        setTitle(data.post.title);
+        setDescription(data.post.desc);
+        setCatagory(data.post.catagory);
+      } catch (err) {}
+    })();
+  }, [id]);
+
   const publish = async () => {
     if (!title || !description) return;
 
     setLoading(true);
 
-    let filename = null;
+    const prevFile = post?.avatar.split("/").splice(4, 1)[0];
+
+    let filename = prevFile;
 
     if (image) {
       const formdata = new FormData();
       formdata.append("file", image);
+      formdata.append("filename", prevFile);
 
       try {
         const { data } = await apiUploadImage(formdata);
@@ -33,33 +55,26 @@ const NewBlog = () => {
       } catch (err) {}
     }
 
+    const data = {
+      title: title,
+      desc: description,
+      catagory: catagory,
+      filename: filename,
+    };
+
     try {
-      const { data } = await apiNewPost({
-        title,
-        desc: description,
-        catagory,
-        filename: filename ? filename : "",
-      });
-
-      data.post.userId = user;
-
-      setBlogs((blog) => [data.post, ...blog]);
+      await apiUpdatePost(id, data);
       setLoading(false);
-      history.push("/");
-    } catch (err) {}
+      history.push(`/blog/${id}`);
+    } catch (err) {
+      setLoading(false);
+    }
   };
 
   return (
     <Container>
       <Image>
-        <img
-          src={
-            !image
-              ? "https://source.unsplash.com/1600x900/?nature,water"
-              : URL.createObjectURL(image)
-          }
-          alt=""
-        />
+        <img src={image ? URL.createObjectURL(image) : post?.avatar} alt="" />
         <input
           type="file"
           id="file"
@@ -73,7 +88,7 @@ const NewBlog = () => {
       </Image>
 
       <Options>
-        <select onChange={(e) => setCatagory(e.target.value)}>
+        <select value={catagory} onChange={(e) => setCatagory(e.target.value)}>
           <option value="">Select blog catagory</option>
           <option value="music">Music</option>
           <option value="tech">Tech</option>
@@ -83,15 +98,8 @@ const NewBlog = () => {
         </select>
 
         <div>
-          <button
-            disabled={
-              loading || !title || !description || !image || !catagory
-                ? true
-                : false
-            }
-            onClick={publish}
-          >
-            {loading ? "Posting..." : "Publish"}
+          <button disabled={!title || !description} onClick={publish}>
+            {loading ? "Updating..." : "Update"}
           </button>
         </div>
       </Options>

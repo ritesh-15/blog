@@ -16,21 +16,25 @@ import styled from "styled-components";
 import Profile from "./pages/Profile";
 import ForgotPassword from "./pages/ForgotPassword";
 import NewBlog from "./pages/NewBlog";
-import blogContext from "./context/blogs/blogContext";
-import { apiGetPosts } from "./api/axios";
+import Update from "./pages/Update";
+import { io } from "socket.io-client";
+import socketContext from "./context/socket/socketContext";
 
 function App() {
   const loading = useLoadingWithRefresh();
-  const { setBlogs, blogs } = useContext(blogContext);
+  const { user } = useContext(userContext);
+  const { setSocket } = useContext(socketContext);
 
   useEffect(() => {
-    (async () => {
-      try {
-        const { data } = await apiGetPosts();
-        setBlogs(data.posts);
-      } catch (err) {}
-    })();
-  }, []);
+    if (!user) return;
+    const socket = io("http://localhost:9000");
+
+    setSocket(socket);
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [user]);
 
   return loading ? (
     <Loading>
@@ -67,6 +71,11 @@ function App() {
           <ProtectedRoute path="/profile/:id">
             <Header />
             <Profile />
+          </ProtectedRoute>
+
+          <ProtectedRoute path="/update/:id">
+            <Header />
+            <Update />
           </ProtectedRoute>
         </>
       </Switch>

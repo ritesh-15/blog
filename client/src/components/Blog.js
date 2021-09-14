@@ -8,7 +8,6 @@ import {
   apiDeletePost,
   apiIsLikedPost,
   apiLikePost,
-  apiTotalLikes,
   apiUnLikePost,
 } from "../api/axios";
 import blogContext from "../context/blogs/blogContext";
@@ -18,7 +17,6 @@ function Blog({ title, desc, avatar, userInfo, _id, catagory }) {
   const { user } = useContext(userContext);
   const { blogs, setBlogs } = useContext(blogContext);
   const [like, setLike] = useState(false);
-  const [likes, setLikes] = useState(0);
   const history = useHistory();
 
   const deletePost = async () => {
@@ -62,22 +60,9 @@ function Blog({ title, desc, avatar, userInfo, _id, catagory }) {
         if (data.likeduser) {
           setLike(true);
         }
-      } catch (err) {
-        console.log(err);
-      }
+      } catch (err) {}
     })();
   }, [_id]);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const { data } = await apiTotalLikes(_id);
-        setLikes(data.likes);
-      } catch (err) {
-        console.log(err);
-      }
-    })();
-  }, [like, _id]);
 
   return (
     <Container>
@@ -98,7 +83,6 @@ function Blog({ title, desc, avatar, userInfo, _id, catagory }) {
           ) : (
             <FavoriteIcon onClick={changeLike} className="like-icon " />
           )}
-          <p>{likes}</p>
           {userInfo._id === user?._id && (
             <Delete onClick={deletePost} className="delete-icon" />
           )}
@@ -122,10 +106,10 @@ const Container = styled.div`
   text-overflow: ellipsis;
   padding-bottom: 1rem;
   transition: all 0.15s ease-in;
-  border-radius: 3px;
+  border-radius: 6px;
 
   &:hover {
-    box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     z-index: 50;
   }
 

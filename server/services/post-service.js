@@ -21,6 +21,11 @@ class PostService {
   async deletePost(id) {
     return await Post.deleteOne({ _id: id });
   }
+  async update(_id, title, desc, avatar, catagory) {
+    return await Post.updateMany({ _id }, [
+      { $set: { title, desc, avatar, catagory } },
+    ]);
+  }
 }
 
 export default new PostService();

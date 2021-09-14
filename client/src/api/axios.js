@@ -68,4 +68,12 @@ export const apiIsLikedPost = (id) => api.get(`/api/is-liked/${id}`);
 
 export const apiTotalLikes = (id) => api.get(`/api/total-likes/${id}`);
 
+export const apiUpdatePost = (id, data) =>
+  api.post(`/api/update-post/${id}`, data);
+
+export const apiNewComment = (id, message) =>
+  api.post(`/api/new-comment/${id}`, message);
+
+export const apiGetComments = (id) => api.get(`/api/get-comments/${id}`);
+
 export default api;

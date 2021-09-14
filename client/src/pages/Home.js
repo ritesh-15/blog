@@ -10,7 +10,16 @@ import blogContext from "../context/blogs/blogContext";
 function Home() {
   const { user } = useContext(userContext);
   const history = useHistory();
-  const { blogs } = useContext(blogContext);
+  const { blogs, setBlogs } = useContext(blogContext);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await apiGetPosts();
+        setBlogs(data.posts);
+      } catch (err) {}
+    })();
+  }, []);
 
   const createBlog = () => {
     if (!user) history.push("/login");

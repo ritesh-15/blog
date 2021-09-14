@@ -6,6 +6,7 @@ import authRouter from "./routes/auth-routes.js";
 import fileRouter from "./routes/file-routes.js";
 import cookieParser from "cookie-parser";
 import postRouter from "./routes/post-routes.js";
+import { Server } from "socket.io";
 
 config();
 
@@ -33,4 +34,22 @@ app.use("/api", authRouter);
 app.use("/api", fileRouter);
 app.use("/api", postRouter);
 
-app.listen(PORT, () => console.log(`Server started on ${PORT}`));
+const server = app.listen(PORT, () => console.log(`Server started on ${PORT}`));
+
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log("User conneted");
+
+  socket.on("join-blog", (id) => {
+    socket.join(id);
+
+    socket.on("new-comment", (comment) => {
+      io.to(id).emit("new-comment", comment);
+    });
+  });
+});

@@ -1,6 +1,6 @@
-/* @import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap"); */
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap");
 
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap");
+/* @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap"); */
 
 * {
   margin: 0;
@@ -13,7 +13,7 @@
 }
 
 body {
-  font-family: "Open Sans", sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 button,
@@ -110,4 +110,10 @@ p {
   100% {
     transform: scale(1);
   }
+}
+
+.edit-icon {
+  color: rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  margin-right: 1rem;
 }

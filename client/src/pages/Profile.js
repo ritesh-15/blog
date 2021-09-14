@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
 
 function Profile() {
   const { user, setUser } = useContext(userContext);
-  const [name, setName] = useState(user?.name);
+  const [name, setName] = useState(user?.userName);
   const [email, setEmail] = useState(user?.email);
   const [error, setError] = useState("");
   const [posts, setPosts] = useState([]);

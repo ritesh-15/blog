@@ -24,4 +24,10 @@ router.get("/is-liked/:id", authMiddleware, postController.isLiked);
 
 router.get("/total-likes/:id", authMiddleware, postController.getTotalLikes);
 
+router.post("/update-post/:id", authMiddleware, postController.updatePost);
+
+router.post("/new-comment/:id", authMiddleware, postController.newComment);
+
+router.get("/get-comments/:id", authMiddleware, postController.getComments);
+
 export default router;

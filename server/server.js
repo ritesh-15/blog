@@ -49,7 +49,8 @@ io.on("connection", (socket) => {
     socket.join(id);
 
     socket.on("new-comment", (comment) => {
-      io.to(id).emit("new-comment", comment);
+      console.log(comment);
+      io.to(id).emit("comment", comment);
     });
   });
 });

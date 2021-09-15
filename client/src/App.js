@@ -26,15 +26,15 @@ function App() {
   const { setSocket } = useContext(socketContext);
 
   useEffect(() => {
-    if (!user) return;
     const socket = io("http://localhost:9000");
 
     setSocket(socket);
 
     return () => {
       socket.disconnect();
+      socket.close();
     };
-  }, [user]);
+  }, []);
 
   return loading ? (
     <Loading>

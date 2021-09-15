@@ -38,7 +38,6 @@ function Home() {
       </Banner>
 
       <Main>
-        <Catagories />
         <Blogs posts={blogs} />
       </Main>
     </Container>
@@ -119,9 +118,5 @@ const Main = styled.div`
   width: 95%;
   display: grid;
   margin: 0 auto;
-  grid-template-columns: 1fr 4fr;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
+  grid-template-columns: 1fr;
 `;

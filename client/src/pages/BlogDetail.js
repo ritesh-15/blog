@@ -33,13 +33,17 @@ function BlogDetail() {
   const [sending, setSending] = useState(false);
 
   useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await apiGetComments(id);
+        setComments(data.comments);
+      } catch (err) {}
+    })();
+  }, [id]);
+
+  useEffect(() => {
     if (!socket) return;
-
     socket.emit("join-blog", id);
-
-    return () => {
-      socket.off();
-    };
   }, [id, socket]);
 
   useEffect(() => {
@@ -105,25 +109,16 @@ function BlogDetail() {
   };
 
   useEffect(() => {
-    (async () => {
-      try {
-        const { data } = await apiGetComments(id);
-        setComments(data.comments);
-      } catch (err) {}
-    })();
-  }, [id]);
-
-  useEffect(() => {
     if (!socket) return;
 
-    socket.on("new-comment", (comment) => {
+    socket.on("comment", (comment) => {
       setComments((c) => [comment, ...c]);
     });
 
     return () => {
       socket.off();
     };
-  }, [socket, comments]);
+  }, [comments, socket]);
 
   const postComment = async (e) => {
     e.preventDefault();
@@ -228,7 +223,6 @@ function BlogDetail() {
                 <button
                   disabled={sending || !message ? true : false}
                   onClick={postComment}
-                  type="submit"
                 >
                   {sending ? "Posting..." : "Post"}
                 </button>

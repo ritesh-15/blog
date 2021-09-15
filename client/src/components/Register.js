@@ -10,13 +10,6 @@ function Register() {
   const [error, setError] = useState("");
   const { setUser } = useContext(userContext);
   const [loading, setLoading] = useState(false);
-  const [unMounted, setUnmounted] = useState(false);
-
-  useEffect(() => {
-    return () => {
-      setUnmounted(true);
-    };
-  }, []);
 
   const checkEmail = async () => {
     try {
@@ -39,9 +32,8 @@ function Register() {
     try {
       const { data } = await apiRegister({ name, email, password });
 
-      if (unMounted) {
-        setUser(data.user);
-      }
+      setUser(data.user);
+
       setLoading(false);
       setError("");
     } catch (error) {

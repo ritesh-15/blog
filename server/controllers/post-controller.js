@@ -28,7 +28,7 @@ class PostController {
       desc,
       catagory,
       userId: req.user._id,
-      avatar: filename ? `http://localhost:9000/storage/${filename}` : "",
+      avatar: filename ? `${process.env.APP_BASE_URL}/storage/${filename}` : "",
     };
 
     try {
@@ -158,7 +158,7 @@ class PostController {
     if (!title || !desc || !filename || !catagory || !id)
       return res.status(400);
 
-    const avatar = `http://localhost:9000/storage/${filename}`;
+    const avatar = `${process.env.APP_BASE_URL}/storage/${filename}`;
 
     try {
       await postService.update(id, title, desc, avatar, catagory);

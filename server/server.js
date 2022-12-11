@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 9000;
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: process.env.CLIENT_BASE_URL,
     credentials: true,
     methods: ["GET", "POST"],
   })
@@ -38,19 +38,17 @@ const server = app.listen(PORT, () => console.log(`Server started on ${PORT}`));
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: process.env.CLIENT_BASE_URL,
   },
 });
 
 io.on("connection", (socket) => {
-  console.log("User conneted");
-
+  let roomId;
   socket.on("join-blog", (id) => {
+    roomId = id;
     socket.join(id);
-
-    socket.on("new-comment", (comment) => {
-      console.log(comment);
-      io.to(id).emit("comment", comment);
-    });
+  });
+  socket.on("new-comment", (comment) => {
+    io.to(roomId).emit("comment", comment);
   });
 });

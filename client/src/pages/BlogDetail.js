@@ -44,7 +44,7 @@ function BlogDetail() {
   useEffect(() => {
     if (!socket) return;
     socket.emit("join-blog", id);
-  }, [id, socket]);
+  }, [id]);
 
   useEffect(() => {
     (async () => {
@@ -110,15 +110,14 @@ function BlogDetail() {
 
   useEffect(() => {
     if (!socket) return;
-
     socket.on("comment", (comment) => {
+      console.log(comment);
       setComments((c) => [comment, ...c]);
     });
-
     return () => {
-      socket.off();
+      socket.off("comment");
     };
-  }, [comments, socket]);
+  }, [socket]);
 
   const postComment = async (e) => {
     e.preventDefault();

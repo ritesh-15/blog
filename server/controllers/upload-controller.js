@@ -33,7 +33,7 @@ class UploadController {
       }
 
       try {
-        const url = `http://localhost:9000/uploads/${req.file.filename}`;
+        const url = `${process.env.APP_BASE_URL}/uploads/${req.file.filename}`;
         await userService.updateAvatar(req.user._id, url);
         user.avatar = url;
       } catch (err) {

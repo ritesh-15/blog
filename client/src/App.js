@@ -22,14 +22,11 @@ import socketContext from "./context/socket/socketContext";
 
 function App() {
   const loading = useLoadingWithRefresh();
-  const { user } = useContext(userContext);
   const { setSocket } = useContext(socketContext);
 
   useEffect(() => {
-    const socket = io("http://localhost:9000");
-
+    const socket = io(process.env.REACT_APP_SERVER_URL);
     setSocket(socket);
-
     return () => {
       socket.disconnect();
       socket.close();

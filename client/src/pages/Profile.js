@@ -121,7 +121,7 @@ function Profile() {
         </Info>
       </Details>
 
-      <Blogs posts={posts} />
+      {posts.length > 0 ? <Blogs posts={posts} /> : <p>No post yet!!!</p>}
     </Container>
   );
 }

@@ -3,11 +3,13 @@ import Token from "../models/token-modal.js";
 
 class TokenService {
   async genrateToken(data) {
-    const accessToken = await jwt.sign(data, process.env.ACCESS_TOKEN, {
-      expiresIn: "15s",
+    const accessToken = jwt.sign(data, process.env.ACCESS_TOKEN, {
+      expiresIn: "15m",
     });
 
-    const refreshToken = await jwt.sign(data, process.env.REFRESH_TOKEN);
+    const refreshToken = jwt.sign(data, process.env.REFRESH_TOKEN, {
+      expiresIn: "7d",
+    });
 
     return { accessToken, refreshToken };
   }

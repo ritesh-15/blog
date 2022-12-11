@@ -13,14 +13,8 @@ function Header() {
       <Container>
         <Center>
           <Link to="/">
-            <span>Home</span>
+            <NavHeader>bloggers</NavHeader>
           </Link>
-          <a>
-            <span>About</span>
-          </a>
-          <a>
-            <span>Contact Us</span>
-          </a>
         </Center>
         <User>
           {!user ? (
@@ -46,6 +40,10 @@ function Header() {
 }
 
 export default Header;
+
+const NavHeader = styled.span`
+  font-weight: bold;
+`;
 
 const Container = styled.div`
   height: 60px;

@@ -43,3 +43,13 @@ A blogging website where you can share your thoughts with the world. Share your 
 
 Visit here 👇
 https://blogger-rk.netlify.app/
+
+## Screenshots
+
+![](/assets/1.png)
+
+![](/assets/2.png)
+
+![](/assets/3.png)
+
+![](/assets/4.png)

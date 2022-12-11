@@ -1,0 +1,13 @@
+node_modules
+
+.env
+
+api.rest
+
+/uploads/*.jpg
+/uploads/*.png
+/uploads/*.webp
+
+/storage/*.jpg
+/storage/*.png
+/storage/*.webp

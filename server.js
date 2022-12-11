@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 9000;
 
 app.use(
   cors({
-    origin: process.env.CLIENT_BASE_URL,
+    origin: [process.env.CLIENT_BASE_URL, "*"],
     credentials: true,
     methods: ["GET", "POST"],
   })
@@ -39,6 +39,7 @@ const server = app.listen(PORT, () => console.log(`Server started on ${PORT}`));
 const io = new Server(server, {
   cors: {
     origin: process.env.CLIENT_BASE_URL,
+    credentials: true,
   },
 });
 

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:9000",
+  baseURL: process.env.REACT_APP_SERVER_URL,
   withCredentials: true,
 });
 
@@ -20,9 +20,12 @@ api.interceptors.response.use(
       originalRequest.isRetry = true;
 
       try {
-        const response = await axios.get("http://localhost:9000/api/refresh", {
-          withCredentials: true,
-        });
+        const response = await axios.get(
+          `${process.env.REACT_APP_SERVER_URL}/api/refresh`,
+          {
+            withCredentials: true,
+          }
+        );
 
         return api.request(originalRequest);
       } catch (err) {}

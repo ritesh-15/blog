@@ -1,0 +1,119 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap");
+
+/* @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap"); */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #53d611;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+}
+
+button,
+input,
+textarea {
+  font-family: inherit;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+a,
+span,
+p {
+  font-size: 1rem;
+  font-weight: 400;
+  font-family: inherit;
+}
+
+/* Loading animation */
+@keyframes loading {
+  0% {
+    background: rgba(0, 0, 0, 0.01);
+  }
+  100% {
+    background: rgba(0, 0, 0, 0.08);
+  }
+}
+
+/* Active catagori */
+.active {
+  color: var(--primary);
+}
+
+.like-icon {
+  color: rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.like {
+  cursor: pointer;
+  color: var(--primary);
+}
+
+.active-btn {
+  border-color: var(--primary) !important;
+  background: #fff !important;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.delete-icon {
+  margin-left: 1rem;
+  cursor: pointer;
+  color: rgba(255, 0, 0, 0.671);
+}
+
+/* Message */
+.close-message {
+  transform: translateY(-150%);
+}
+
+.like-animation {
+  animation: like-animation 1 ease 250ms;
+}
+
+@keyframes like-animation {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.edit-icon {
+  color: rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  margin-right: 1rem;
+}

@@ -44,11 +44,15 @@ class UserController {
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24,
+      secure: true,
+      samesite: "none",
     });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24,
+      secure: true,
+      samesite: "none",
     });
 
     const createdUser = new UserDto(user);
@@ -97,11 +101,15 @@ class UserController {
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24,
+      secure: true,
+      samesite: "none",
     });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24,
+      secure: true,
+      samesite: "none",
     });
 
     const createdUser = new UserDto(user);
@@ -166,11 +174,15 @@ class UserController {
     res.cookie("accessToken", accessToken, {
       maxAge: 1000 * 60 * 60 * 24,
       httpOnly: true,
+      secure: true,
+      samesite: "none",
     });
 
     res.cookie("refreshToken", refreshToken, {
       maxAge: 1000 * 60 * 60 * 24,
       httpOnly: true,
+      secure: true,
+      samesite: "none",
     });
 
     const userDto = new UserDto(user);

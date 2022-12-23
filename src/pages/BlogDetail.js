@@ -111,7 +111,6 @@ function BlogDetail() {
   useEffect(() => {
     if (!socket) return;
     socket.on("comment", (comment) => {
-      console.log(comment);
       setComments((c) => [comment, ...c]);
     });
     return () => {
